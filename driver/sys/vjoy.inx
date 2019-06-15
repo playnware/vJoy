@@ -31,15 +31,18 @@ CatalogFile = vJoy.cat
 [SourceDisksFiles]
 vjoy.sys = 99
 hidkmdf.sys = 99
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=99
 
 [SourceDisksNames]
 99 = %DISK_NAME%,,,""
 
 [DestinationDirs]
 CopySystemSysFiles = 12      
-CopyFunctionDriver = 12      
+CopyFunctionDriver = 12
+CopyFunctionDriverHIDKMDF = 12
 ;CopyFilterDriver = 12      
 CopyFilesDLL = 11 
+vjoy.Inst_CoInstaller_CopyFiles = 11
 
 [Manufacturer]
 %VENDOR%=Vendor, NT$ARCH$, NT$ARCH$.6.1
@@ -58,7 +61,7 @@ CopyFilesDLL = 11
 ;   vJoy for XP thru Vista
 ;===============================================================
 [vjoy.Inst.NT]
-CopyFiles = CopySystemSysFiles, CopyFunctionDriver, CopyFilesDLL
+CopyFiles = CopySystemSysFiles, CopyFunctionDriverHIDKMDF, CopyFilesDLL
 Include = input.inf
 Needs   = HID_Inst.NT
 
@@ -72,7 +75,7 @@ AddReg = vjoy.AddReg
 AddService = hidkmdf,,hidkmdf_Service_Inst,
 AddService = vjoy,0x00000002, vjoy_Service_Inst, vjoy_EventLog_Inst
 
-[CopyFunctionDriver]
+[CopyFunctionDriverHIDKMDF]
 hidkmdf.sys
 
 [vjoy.AddReg]
@@ -200,8 +203,6 @@ ServiceBinary  = %12%\vjoy.sys
 ;================================================================
 ;--- WDF Coinstaller installation ------
 ;
-[DestinationDirs]
-vjoy.Inst_CoInstaller_CopyFiles = 11
 
 [vjoy.Inst.NT.CoInstallers]
 AddReg=vjoy.Inst_CoInstaller_AddReg
@@ -212,9 +213,6 @@ HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfC
 
 [vjoy.Inst_CoInstaller_CopyFiles]
 WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
-
-[SourceDisksFiles]
-WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=99 ; make sure the number matches with SourceDisksNames
 
 [vjoy.Inst.NT.Wdf]
 KmdfService = vjoy, vjoy_wdfsect
